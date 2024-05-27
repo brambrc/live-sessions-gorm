@@ -57,12 +57,45 @@ func CreateUser(db *gorm.DB, user User) error {
 // 	return user, nil
 // }
 
-func FindUserAll(db *gorm.DB) ([]User, error) {
-	var users []User
-	if err := db.Find(&users).Error; err != nil {
-		return nil, err
+// func FindUserAll(db *gorm.DB) ([]User, error) {
+// 	var users []User
+// 	if err := db.Find(&users).Error; err != nil {
+// 		return nil, err
+// 	}
+// 	return users, nil
+// }
+
+// func FindUserByEmail(db *gorm.DB, email string) (User, error) {
+// 	var user User
+// 	if err := db.Where("email = ?", email).First(&user).Error; err != nil {
+// 		return user, err
+// 	}
+// 	return user, nil
+// }
+
+// func FindUserByName(db *gorm.DB, name string) (User, error) {
+// 	var user User
+// 	if err := db.Where("name LIKE ?", "%" + name + "%").First(&user).Error; err != nil {
+// 		return user, err
+// 	}
+// 	return user, nil
+// }
+
+// func UpdateNameByEmail(db *gorm.DB, email string, newName string) error {
+// 	var user User
+// 	if err := db.Where("email = ?", email).First(&user).Error; err != nil {
+// 		return err
+// 	}
+// 	user.Name = newName
+// 	return db.Save(&user).Error
+// }
+
+func DeleteUserByEmail(db *gorm.DB, email string) error {
+	var user User
+	if err := db.Where("email = ?", email).First(&user).Error; err != nil {
+		return err
 	}
-	return users, nil
+	return db.Delete(&user).Error
 }
 
 
@@ -77,13 +110,13 @@ func main() {
 	}
 	log.Println("Migrated table succesfully")
 
-	user := User{
-		Name: "Bracmatya Doe",
-		Email: "bracmatya@mail.com",
-	}
-	if err := CreateUser(db, user); err != nil {
-		log.Fatalf("Failed to create user: %v", err)
-	}
+	// user := User{
+	// 	Name: "Bracmatya Doe",
+	// 	Email: "bracmatya@mail.com",
+	// }
+	// if err := CreateUser(db, user); err != nil {
+	// 	log.Fatalf("Failed to create user: %v", err)
+	// }
 
 	// if err := UpdateUserEmail(db, 1, "mail@mail.com"); err != nil {
 	// 	log.Fatalf("Failed to update user: %v", err)
@@ -99,11 +132,28 @@ func main() {
 	// }
 	// log.Println("User found: ", user)
 
-	users, err := FindUserAll(db)
-	if err != nil {
+	// users, err := FindUserAll(db)
+	// if err != nil {
+	// 	log.Fatalf("Failed to find user: %v", err)
+	// }
+	// log.Println("User found: %+v\n", users)
+
+	// dataUser, err := FindUserByEmail(db, "anggiet@mail.com")
+	// if err != nil {
+	// 	log.Fatalf("Failed to find user: %v", err)
+	// }
+
+	// dataUser , err := FindUserByName(db, "Anggiet")
+	// if err != nil {
+	// 	log.Fatalf("Failed to find user: %v", err)
+	// }
+
+	if err := DeleteUserByEmail(db, "mail@mail.com"); err != nil {
+
 		log.Fatalf("Failed to find user: %v", err)
 	}
-	log.Println("User found: %+v\n", users)
+
+	log.Println("User updated succesfully")
 
 
 	// log.Println("User deleted succesfully")
